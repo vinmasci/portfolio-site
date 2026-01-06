@@ -820,6 +820,64 @@
     // Enemy bullets
     let enemyBullets = [];
 
+    // Sound effects
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playPew() {
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.1);
+      gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+      oscillator.start(audioCtx.currentTime);
+      oscillator.stop(audioCtx.currentTime + 0.1);
+    }
+
+    function playHit() {
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      oscillator.type = 'square';
+      oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
+      gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+      oscillator.start(audioCtx.currentTime);
+      oscillator.stop(audioCtx.currentTime + 0.15);
+    }
+
+    function playScore() {
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      oscillator.type = 'square';
+      oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+      oscillator.frequency.setValueAtTime(800, audioCtx.currentTime + 0.05);
+      gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+      oscillator.start(audioCtx.currentTime);
+      oscillator.stop(audioCtx.currentTime + 0.1);
+    }
+
+    function playDeath() {
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      oscillator.type = 'sawtooth';
+      oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.4);
+      gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+      oscillator.start(audioCtx.currentTime);
+      oscillator.stop(audioCtx.currentTime + 0.4);
+    }
+
     // Controls
     const keys = {};
 
@@ -1053,6 +1111,7 @@
             bullet.y = -100;
             score += 10;
             scoreDisplay.textContent = score;
+            playScore();
             
             // Speed up as enemies die
             const aliveCount = enemies.filter(e => e.alive).length;
@@ -1070,6 +1129,7 @@
           bullet.y = canvas.height + 100;
           lives--;
           livesDisplay.textContent = lives;
+          playHit();
           if (lives <= 0) {
             gameOver();
           }
@@ -1155,6 +1215,7 @@
       if (gameOverTransition) return;
       gameOverTransition = true;
       gameRunning = false;
+      playDeath();
 
       // Flash effect before showing game over
       let flashes = 0;
@@ -1195,6 +1256,7 @@
           x: player.x + player.width / 2 - 1.5,
           y: player.y
         });
+        playPew();
       }
     });
 
