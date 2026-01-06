@@ -823,6 +823,15 @@
     // Sound effects
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
+    // Resume audio context on user interaction (browsers require this)
+    function resumeAudio() {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+    document.addEventListener('click', resumeAudio, { once: true });
+    document.addEventListener('keydown', resumeAudio, { once: true });
+
     function playPew() {
       const oscillator = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
