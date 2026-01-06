@@ -1430,7 +1430,7 @@
 
     // Event listeners
     startBtn.addEventListener('click', () => {
-      resumeAudio();
+      unlockAudio();
       startGame();
     });
 
@@ -1438,7 +1438,7 @@
     let touchX = null;
     canvas.addEventListener('touchstart', (e) => {
       e.preventDefault();
-      resumeAudio();
+      unlockAudio();
       const touch = e.touches[0];
       const rect = canvas.getBoundingClientRect();
       touchX = touch.clientX - rect.left;
@@ -1695,14 +1695,14 @@
     }
 
     pongStartBtn.addEventListener('click', () => {
-      resumeAudio();
+      unlockAudio();
       startPong();
     });
 
     // Mobile touch controls for Pong
     pongCanvas.addEventListener('touchstart', (e) => {
       e.preventDefault();
-      resumeAudio();
+      unlockAudio();
     }, { passive: false });
 
     pongCanvas.addEventListener('touchmove', (e) => {
@@ -1902,7 +1902,7 @@
     }
 
     snakeStartBtn.addEventListener('click', () => {
-      resumeAudio();
+      unlockAudio();
       startSnake();
     });
 
@@ -1912,7 +1912,7 @@
 
     snakeCanvas.addEventListener('touchstart', (e) => {
       e.preventDefault();
-      resumeAudio();
+      unlockAudio();
       snakeTouchStartX = e.touches[0].clientX;
       snakeTouchStartY = e.touches[0].clientY;
     }, { passive: false });
@@ -1949,7 +1949,7 @@
       snakeControls.querySelectorAll('.ctrl-btn').forEach(btn => {
         const handleSnakeDir = (e) => {
           e.preventDefault();
-          resumeAudio();
+          unlockAudio();
           if (!snakeRunning) return;
 
           const dir = btn.dataset.dir;
@@ -1979,7 +1979,7 @@
 
         const startAction = (e) => {
           e.preventDefault();
-          resumeAudio();
+          unlockAudio();
           if (!gameRunning) return;
 
           if (action === 'fire') {
@@ -2041,7 +2041,7 @@
 
         const startAction = (e) => {
           e.preventDefault();
-          resumeAudio();
+          unlockAudio();
           if (!pongRunning) return;
 
           const movePaddle = () => {
