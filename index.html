@@ -916,7 +916,7 @@
       y: canvas.height - 50,
       width: 40,
       height: 20,
-      speed: 6
+      speed: 10
     };
 
     // Bullets
@@ -1489,7 +1489,7 @@
     // Paddles
     const paddleWidth = 12;
     const paddleHeight = 80;
-    const paddleSpeed = 7;
+    const paddleSpeed = 12;
 
     const playerPaddle = {
       x: 30,
@@ -1504,7 +1504,7 @@
       y: pongCanvas.height / 2 - paddleHeight / 2,
       width: paddleWidth,
       height: paddleHeight,
-      speed: 4
+      speed: 8
     };
 
     // Ball
@@ -2005,10 +2005,10 @@
           if (!pongRunning) return;
 
           const movePaddle = () => {
-            if (action === 'up' && pongPlayer.y > 0) {
-              pongPlayer.y -= pongPlayer.speed;
-            } else if (action === 'down' && pongPlayer.y < pongCanvas.height - pongPlayer.height) {
-              pongPlayer.y += pongPlayer.speed;
+            if (action === 'up' && playerPaddle.y > 0) {
+              playerPaddle.y -= paddleSpeed;
+            } else if (action === 'down' && playerPaddle.y < pongCanvas.height - playerPaddle.height) {
+              playerPaddle.y += paddleSpeed;
             }
           };
           movePaddle();
