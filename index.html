@@ -899,6 +899,7 @@
 
   <script>
     console.log('=== GAME SCRIPT LOADED ===');
+    alert('Script is running!'); // TEMP DEBUG - remove after testing
 
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -1947,6 +1948,8 @@
 
     // Mobile controls for Snake (D-pad)
     const snakeControls = document.getElementById('snakeControls');
+    console.log('snakeControls element:', snakeControls);
+    console.log('snakeControls buttons:', snakeControls ? snakeControls.querySelectorAll('.ctrl-btn').length : 'N/A');
     snakeControls.querySelectorAll('.ctrl-btn').forEach(btn => {
       const handleSnakeDir = (e) => {
         e.preventDefault();
@@ -1970,13 +1973,17 @@
 
     // Mobile controls for Space Invaders (Left, Right, Fire)
     const invadersControls = document.getElementById('invadersControls');
+    console.log('invadersControls element:', invadersControls);
+    console.log('invadersControls buttons:', invadersControls ? invadersControls.querySelectorAll('.ctrl-btn').length : 'N/A');
     let invadersMoveInterval = null;
 
     invadersControls.querySelectorAll('.ctrl-btn').forEach(btn => {
       const action = btn.dataset.action;
+      console.log('Setting up invaders button:', action);
 
       const startAction = (e) => {
         e.preventDefault();
+        console.log('Invaders button pressed:', action, 'gameRunning:', gameRunning);
         resumeAudio();
         if (!gameRunning) return;
 
