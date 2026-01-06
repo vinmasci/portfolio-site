@@ -933,32 +933,44 @@
     // Enemy bullets
     let enemyBullets = [];
 
-    // Sound effects - lazy init for mobile compatibility
+    // Sound effects - with iOS unlock hack
     let audioCtx = null;
+    let audioUnlocked = false;
 
     function getAudioContext() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
       return audioCtx;
     }
 
-    function resumeAudio() {
-      getAudioContext();
+    // iOS requires playing actual audio in a touch handler to unlock
+    function unlockAudio() {
+      if (audioUnlocked) return;
+
+      const ctx = getAudioContext();
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
+
+      // Play a silent buffer to unlock audio on iOS
+      const buffer = ctx.createBuffer(1, 1, 22050);
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(ctx.destination);
+      source.start(0);
+
+      audioUnlocked = true;
     }
 
-    // Try to unlock audio on any user interaction
-    const unlockAudio = () => {
-      getAudioContext();
-    };
-    document.addEventListener('click', unlockAudio);
-    document.addEventListener('touchstart', unlockAudio);
-    document.addEventListener('keydown', unlockAudio);
+    // Unlock on first interaction
+    document.addEventListener('touchstart', unlockAudio, { once: true });
+    document.addEventListener('touchend', unlockAudio, { once: true });
+    document.addEventListener('click', unlockAudio, { once: true });
+    document.addEventListener('keydown', unlockAudio, { once: true });
 
     function playPew() {
+      unlockAudio();
       const ctx = getAudioContext();
       const oscillator = ctx.createOscillator();
       const gainNode = ctx.createGain();
