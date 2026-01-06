@@ -1973,19 +1973,21 @@
 
     // Mobile controls for Space Invaders (Left, Right, Fire)
     const invadersControls = document.getElementById('invadersControls');
-    console.log('invadersControls element:', invadersControls);
-    console.log('invadersControls buttons:', invadersControls ? invadersControls.querySelectorAll('.ctrl-btn').length : 'N/A');
+    alert('Invaders controls found: ' + (invadersControls ? 'YES' : 'NO')); // TEMP DEBUG
     let invadersMoveInterval = null;
 
-    invadersControls.querySelectorAll('.ctrl-btn').forEach(btn => {
-      const action = btn.dataset.action;
-      console.log('Setting up invaders button:', action);
+    if (invadersControls) {
+      invadersControls.querySelectorAll('.ctrl-btn').forEach(btn => {
+        const action = btn.dataset.action;
 
-      const startAction = (e) => {
-        e.preventDefault();
-        console.log('Invaders button pressed:', action, 'gameRunning:', gameRunning);
-        resumeAudio();
-        if (!gameRunning) return;
+        btn.onclick = () => {
+          alert('Button clicked: ' + action); // TEMP DEBUG
+        };
+
+        const startAction = (e) => {
+          e.preventDefault();
+          resumeAudio();
+          if (!gameRunning) return;
 
         if (action === 'fire') {
           bullets.push({
@@ -2020,7 +2022,8 @@
       btn.addEventListener('mousedown', startAction);
       btn.addEventListener('mouseup', stopAction);
       btn.addEventListener('mouseleave', stopAction);
-    });
+      });
+    }
 
     // Mobile controls for Pong (Up, Down)
     const pongControls = document.getElementById('pongControls');
