@@ -343,6 +343,45 @@
       box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
     }
 
+    .loves-section {
+      clear: both;
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .pixel-heart {
+      width: 4px;
+      height: 4px;
+      background: #ff4444;
+      flex-shrink: 0;
+      box-shadow:
+        4px 0 #ff4444, 8px 0 #ff4444,
+        16px 0 #ff4444, 20px 0 #ff4444, 24px 0 #ff4444,
+        0 4px #ff4444, 4px 4px #ff4444, 8px 4px #ff4444, 12px 4px #ff4444,
+        16px 4px #ff4444, 20px 4px #ff4444, 24px 4px #ff4444, 28px 4px #ff4444,
+        0 8px #ff4444, 4px 8px #ff4444, 8px 8px #ff4444, 12px 8px #ff4444,
+        16px 8px #ff4444, 20px 8px #ff4444, 24px 8px #ff4444, 28px 8px #ff4444,
+        4px 12px #ff4444, 8px 12px #ff4444, 12px 12px #ff4444,
+        16px 12px #ff4444, 20px 12px #ff4444, 24px 12px #ff4444,
+        8px 16px #ff4444, 12px 16px #ff4444, 16px 16px #ff4444, 20px 16px #ff4444,
+        12px 20px #ff4444, 16px 20px #ff4444;
+      margin-right: 32px;
+    }
+
+    .loves-list {
+      font-family: 'Inter', sans-serif;
+      color: #ccc;
+      font-size: 1rem;
+    }
+
+    .loves-list span {
+      color: #ff4444;
+      margin: 0 0.3rem;
+    }
+
     .fortune-cookie {
       clear: both;
       margin-top: 2rem;
@@ -819,6 +858,11 @@
     <p class="about-text">
       <strong>Currently available for projects</strong> — got an idea? Let's build it.
     </p>
+
+    <div class="loves-section">
+      <div class="pixel-heart"></div>
+      <p class="loves-list">Maps<span>•</span>Cycling<span>•</span>Running<span>•</span>Soggy Chips</p>
+    </div>
 
     <div class="fortune-cookie">
       <span class="fortune-icon">🥠</span>
