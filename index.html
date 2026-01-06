@@ -121,10 +121,11 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-image: 
+      background-image:
         radial-gradient(white 1px, transparent 1px);
       background-size: 50px 50px;
       opacity: 0.03;
+      pointer-events: none;
     }
 
     .hero-title {
@@ -715,7 +716,6 @@
       <button class="game-tab active" data-game="invaders">INVADERS</button>
       <button class="game-tab" data-game="pong">PONG</button>
       <button class="game-tab" data-game="snake">SNAKE</button>
-      <button id="soundTest" style="margin-left: auto; padding: 0.5rem 1rem; font-family: 'Press Start 2P', cursive; font-size: 0.5rem; background: #333; border: 1px solid #00ff88; color: #00ff88; cursor: pointer;">TEST SOUND</button>
     </div>
 
     <div class="game-wrapper">
@@ -898,9 +898,6 @@
   </footer>
 
   <script>
-    console.log('=== GAME SCRIPT LOADED ===');
-    alert('Script is running!'); // TEMP DEBUG - remove after testing
-
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const overlay = document.getElementById('gameOverlay');
@@ -938,56 +935,31 @@
 
     // Sound effects
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    console.log('AudioContext created, initial state:', audioCtx.state);
 
-    // Resume audio context on user interaction (browsers require this)
     function resumeAudio() {
-      console.log('resumeAudio called, current state:', audioCtx.state);
       if (audioCtx.state === 'suspended') {
-        audioCtx.resume().then(() => {
-          console.log('AudioContext resumed successfully, new state:', audioCtx.state);
-        }).catch(err => {
-          console.error('Failed to resume AudioContext:', err);
-        });
+        audioCtx.resume();
       }
     }
     document.addEventListener('click', resumeAudio, { once: true });
     document.addEventListener('keydown', resumeAudio, { once: true });
     document.addEventListener('touchstart', resumeAudio, { once: true });
 
-    // Sound test button
-    document.getElementById('soundTest').addEventListener('click', () => {
-      console.log('Sound test clicked!');
-      console.log('AudioContext state:', audioCtx.state);
-      resumeAudio();
-      setTimeout(() => {
-        console.log('Playing test sound, state:', audioCtx.state);
-        playPew();
-      }, 100);
-    });
-
     function playPew() {
-      console.log('playPew called, audioCtx state:', audioCtx.state);
       resumeAudio();
-      try {
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.1);
-        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-        oscillator.start(audioCtx.currentTime);
-        oscillator.stop(audioCtx.currentTime + 0.1);
-        console.log('playPew oscillator started');
-      } catch (err) {
-        console.error('playPew error:', err);
-      }
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.1);
+      gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+      oscillator.start(audioCtx.currentTime);
+      oscillator.stop(audioCtx.currentTime + 0.1);
     }
 
     function playHit() {
-      console.log('playHit called, audioCtx state:', audioCtx.state);
       resumeAudio();
       const oscillator = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
@@ -1948,80 +1920,74 @@
 
     // Mobile controls for Snake (D-pad)
     const snakeControls = document.getElementById('snakeControls');
-    console.log('snakeControls element:', snakeControls);
-    console.log('snakeControls buttons:', snakeControls ? snakeControls.querySelectorAll('.ctrl-btn').length : 'N/A');
-    snakeControls.querySelectorAll('.ctrl-btn').forEach(btn => {
-      const handleSnakeDir = (e) => {
-        e.preventDefault();
-        resumeAudio();
-        if (!snakeRunning) return;
+    if (snakeControls) {
+      snakeControls.querySelectorAll('.ctrl-btn').forEach(btn => {
+        const handleSnakeDir = (e) => {
+          e.preventDefault();
+          resumeAudio();
+          if (!snakeRunning) return;
 
-        const dir = btn.dataset.dir;
-        if (dir === 'up' && snakeDir.y !== 1) {
-          nextDir = { x: 0, y: -1 };
-        } else if (dir === 'down' && snakeDir.y !== -1) {
-          nextDir = { x: 0, y: 1 };
-        } else if (dir === 'left' && snakeDir.x !== 1) {
-          nextDir = { x: -1, y: 0 };
-        } else if (dir === 'right' && snakeDir.x !== -1) {
-          nextDir = { x: 1, y: 0 };
-        }
-      };
-      btn.addEventListener('touchstart', handleSnakeDir, { passive: false });
-      btn.addEventListener('click', handleSnakeDir);
-    });
+          const dir = btn.dataset.dir;
+          if (dir === 'up' && snakeDir.y !== 1) {
+            nextDir = { x: 0, y: -1 };
+          } else if (dir === 'down' && snakeDir.y !== -1) {
+            nextDir = { x: 0, y: 1 };
+          } else if (dir === 'left' && snakeDir.x !== 1) {
+            nextDir = { x: -1, y: 0 };
+          } else if (dir === 'right' && snakeDir.x !== -1) {
+            nextDir = { x: 1, y: 0 };
+          }
+        };
+        btn.addEventListener('touchstart', handleSnakeDir, { passive: false });
+        btn.addEventListener('click', handleSnakeDir);
+      });
+    }
 
     // Mobile controls for Space Invaders (Left, Right, Fire)
     const invadersControls = document.getElementById('invadersControls');
-    alert('Invaders controls found: ' + (invadersControls ? 'YES' : 'NO')); // TEMP DEBUG
     let invadersMoveInterval = null;
 
     if (invadersControls) {
       invadersControls.querySelectorAll('.ctrl-btn').forEach(btn => {
         const action = btn.dataset.action;
 
-        btn.onclick = () => {
-          alert('Button clicked: ' + action); // TEMP DEBUG
-        };
-
         const startAction = (e) => {
           e.preventDefault();
           resumeAudio();
           if (!gameRunning) return;
 
-        if (action === 'fire') {
-          bullets.push({
-            x: player.x + player.width / 2 - 1.5,
-            y: player.y
-          });
-          playPew();
-        } else if (action === 'left' || action === 'right') {
-          // Start continuous movement
-          const movePlayer = () => {
-            if (action === 'left' && player.x > 0) {
-              player.x -= player.speed;
-            } else if (action === 'right' && player.x < canvas.width - player.width) {
-              player.x += player.speed;
-            }
-          };
-          movePlayer();
-          invadersMoveInterval = setInterval(movePlayer, 50);
-        }
-      };
+          if (action === 'fire') {
+            bullets.push({
+              x: player.x + player.width / 2 - 1.5,
+              y: player.y
+            });
+            playPew();
+          } else if (action === 'left' || action === 'right') {
+            const movePlayer = () => {
+              if (action === 'left' && player.x > 0) {
+                player.x -= player.speed;
+              } else if (action === 'right' && player.x < canvas.width - player.width) {
+                player.x += player.speed;
+              }
+            };
+            movePlayer();
+            invadersMoveInterval = setInterval(movePlayer, 50);
+          }
+        };
 
-      const stopAction = () => {
-        if (invadersMoveInterval) {
-          clearInterval(invadersMoveInterval);
-          invadersMoveInterval = null;
-        }
-      };
+        const stopAction = () => {
+          if (invadersMoveInterval) {
+            clearInterval(invadersMoveInterval);
+            invadersMoveInterval = null;
+          }
+        };
 
-      btn.addEventListener('touchstart', startAction, { passive: false });
-      btn.addEventListener('touchend', stopAction);
-      btn.addEventListener('touchcancel', stopAction);
-      btn.addEventListener('mousedown', startAction);
-      btn.addEventListener('mouseup', stopAction);
-      btn.addEventListener('mouseleave', stopAction);
+        btn.addEventListener('touchstart', startAction, { passive: false });
+        btn.addEventListener('touchend', stopAction);
+        btn.addEventListener('touchcancel', stopAction);
+        btn.addEventListener('mousedown', startAction);
+        btn.addEventListener('mouseup', stopAction);
+        btn.addEventListener('mouseleave', stopAction);
       });
     }
 
@@ -2029,39 +1995,41 @@
     const pongControls = document.getElementById('pongControls');
     let pongMoveInterval = null;
 
-    pongControls.querySelectorAll('.ctrl-btn').forEach(btn => {
-      const action = btn.dataset.action;
+    if (pongControls) {
+      pongControls.querySelectorAll('.ctrl-btn').forEach(btn => {
+        const action = btn.dataset.action;
 
-      const startAction = (e) => {
-        e.preventDefault();
-        resumeAudio();
-        if (!pongRunning) return;
+        const startAction = (e) => {
+          e.preventDefault();
+          resumeAudio();
+          if (!pongRunning) return;
 
-        const movePaddle = () => {
-          if (action === 'up' && pongPlayer.y > 0) {
-            pongPlayer.y -= pongPlayer.speed;
-          } else if (action === 'down' && pongPlayer.y < pongCanvas.height - pongPlayer.height) {
-            pongPlayer.y += pongPlayer.speed;
+          const movePaddle = () => {
+            if (action === 'up' && pongPlayer.y > 0) {
+              pongPlayer.y -= pongPlayer.speed;
+            } else if (action === 'down' && pongPlayer.y < pongCanvas.height - pongPlayer.height) {
+              pongPlayer.y += pongPlayer.speed;
+            }
+          };
+          movePaddle();
+          pongMoveInterval = setInterval(movePaddle, 50);
+        };
+
+        const stopAction = () => {
+          if (pongMoveInterval) {
+            clearInterval(pongMoveInterval);
+            pongMoveInterval = null;
           }
         };
-        movePaddle();
-        pongMoveInterval = setInterval(movePaddle, 50);
-      };
 
-      const stopAction = () => {
-        if (pongMoveInterval) {
-          clearInterval(pongMoveInterval);
-          pongMoveInterval = null;
-        }
-      };
-
-      btn.addEventListener('touchstart', startAction, { passive: false });
-      btn.addEventListener('touchend', stopAction);
-      btn.addEventListener('touchcancel', stopAction);
-      btn.addEventListener('mousedown', startAction);
-      btn.addEventListener('mouseup', stopAction);
-      btn.addEventListener('mouseleave', stopAction);
-    });
+        btn.addEventListener('touchstart', startAction, { passive: false });
+        btn.addEventListener('touchend', stopAction);
+        btn.addEventListener('touchcancel', stopAction);
+        btn.addEventListener('mousedown', startAction);
+        btn.addEventListener('mouseup', stopAction);
+        btn.addEventListener('mouseleave', stopAction);
+      });
+    }
 
     document.addEventListener('keydown', (e) => {
       if (!snakeRunning) return;
