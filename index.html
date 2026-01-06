@@ -674,6 +674,7 @@
       <button class="game-tab active" data-game="invaders">INVADERS</button>
       <button class="game-tab" data-game="pong">PONG</button>
       <button class="game-tab" data-game="snake">SNAKE</button>
+      <button id="soundTest" style="margin-left: auto; padding: 0.5rem 1rem; font-family: 'Press Start 2P', cursive; font-size: 0.5rem; background: #333; border: 1px solid #00ff88; color: #00ff88; cursor: pointer;">TEST SOUND</button>
     </div>
 
     <div class="game-wrapper">
@@ -839,6 +840,8 @@
   </footer>
 
   <script>
+    console.log('=== GAME SCRIPT LOADED ===');
+
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const overlay = document.getElementById('gameOverlay');
@@ -892,6 +895,17 @@
     document.addEventListener('click', resumeAudio, { once: true });
     document.addEventListener('keydown', resumeAudio, { once: true });
     document.addEventListener('touchstart', resumeAudio, { once: true });
+
+    // Sound test button
+    document.getElementById('soundTest').addEventListener('click', () => {
+      console.log('Sound test clicked!');
+      console.log('AudioContext state:', audioCtx.state);
+      resumeAudio();
+      setTimeout(() => {
+        console.log('Playing test sound, state:', audioCtx.state);
+        playPew();
+      }, 100);
+    });
 
     function playPew() {
       console.log('playPew called, audioCtx state:', audioCtx.state);
