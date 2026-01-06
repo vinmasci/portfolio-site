@@ -933,118 +933,131 @@
     // Enemy bullets
     let enemyBullets = [];
 
-    // Sound effects
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // Sound effects - lazy init for mobile compatibility
+    let audioCtx = null;
 
-    function resumeAudio() {
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
       if (audioCtx.state === 'suspended') {
         audioCtx.resume();
       }
+      return audioCtx;
     }
-    document.addEventListener('click', resumeAudio, { once: true });
-    document.addEventListener('keydown', resumeAudio, { once: true });
-    document.addEventListener('touchstart', resumeAudio, { once: true });
+
+    function resumeAudio() {
+      getAudioContext();
+    }
+
+    // Try to unlock audio on any user interaction
+    const unlockAudio = () => {
+      getAudioContext();
+    };
+    document.addEventListener('click', unlockAudio);
+    document.addEventListener('touchstart', unlockAudio);
+    document.addEventListener('keydown', unlockAudio);
 
     function playPew() {
-      resumeAudio();
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
+      const ctx = getAudioContext();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
       oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-      oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.1);
-      gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-      oscillator.start(audioCtx.currentTime);
-      oscillator.stop(audioCtx.currentTime + 0.1);
+      gainNode.connect(ctx.destination);
+      oscillator.frequency.setValueAtTime(800, ctx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.1);
+      gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.1);
     }
 
     function playHit() {
-      resumeAudio();
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
+      const ctx = getAudioContext();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
       oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
+      gainNode.connect(ctx.destination);
       oscillator.type = 'square';
-      oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
-      gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-      oscillator.start(audioCtx.currentTime);
-      oscillator.stop(audioCtx.currentTime + 0.15);
+      oscillator.frequency.setValueAtTime(400, ctx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.15);
+      gainNode.gain.setValueAtTime(0.2, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.15);
     }
 
     function playScore() {
-      resumeAudio();
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
+      const ctx = getAudioContext();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
       oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
+      gainNode.connect(ctx.destination);
       oscillator.type = 'square';
-      oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
-      oscillator.frequency.setValueAtTime(800, audioCtx.currentTime + 0.05);
-      gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-      oscillator.start(audioCtx.currentTime);
-      oscillator.stop(audioCtx.currentTime + 0.1);
+      oscillator.frequency.setValueAtTime(600, ctx.currentTime);
+      oscillator.frequency.setValueAtTime(800, ctx.currentTime + 0.05);
+      gainNode.gain.setValueAtTime(0.2, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.1);
     }
 
     function playDeath() {
-      resumeAudio();
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
+      const ctx = getAudioContext();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
       oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
+      gainNode.connect(ctx.destination);
       oscillator.type = 'sawtooth';
-      oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.4);
-      gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-      oscillator.start(audioCtx.currentTime);
-      oscillator.stop(audioCtx.currentTime + 0.4);
+      oscillator.frequency.setValueAtTime(300, ctx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.4);
+      gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.4);
     }
 
     function playPong() {
-      resumeAudio();
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
+      const ctx = getAudioContext();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
       oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
+      gainNode.connect(ctx.destination);
       oscillator.type = 'square';
-      oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
-      gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-      oscillator.start(audioCtx.currentTime);
-      oscillator.stop(audioCtx.currentTime + 0.05);
+      oscillator.frequency.setValueAtTime(440, ctx.currentTime);
+      gainNode.gain.setValueAtTime(0.2, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.05);
     }
 
     function playEat() {
-      resumeAudio();
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
+      const ctx = getAudioContext();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
       oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
+      gainNode.connect(ctx.destination);
       oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(700, audioCtx.currentTime + 0.1);
-      gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-      oscillator.start(audioCtx.currentTime);
-      oscillator.stop(audioCtx.currentTime + 0.1);
+      oscillator.frequency.setValueAtTime(500, ctx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(700, ctx.currentTime + 0.1);
+      gainNode.gain.setValueAtTime(0.2, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.1);
     }
 
     function playPongScore() {
-      resumeAudio();
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
+      const ctx = getAudioContext();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
       oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
+      gainNode.connect(ctx.destination);
       oscillator.type = 'triangle';
-      oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
-      gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-      oscillator.start(audioCtx.currentTime);
-      oscillator.stop(audioCtx.currentTime + 0.3);
+      oscillator.frequency.setValueAtTime(200, ctx.currentTime);
+      gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.3);
     }
 
     // Controls
@@ -1946,6 +1959,7 @@
     // Mobile controls for Space Invaders (Left, Right, Fire)
     const invadersControls = document.getElementById('invadersControls');
     let invadersMoveInterval = null;
+    let invadersFireInterval = null;
 
     if (invadersControls) {
       invadersControls.querySelectorAll('.ctrl-btn').forEach(btn => {
@@ -1957,11 +1971,17 @@
           if (!gameRunning) return;
 
           if (action === 'fire') {
-            bullets.push({
-              x: player.x + player.width / 2 - 1.5,
-              y: player.y
-            });
-            playPew();
+            // Fire immediately and continue firing while held
+            const doFire = () => {
+              if (!gameRunning) return;
+              bullets.push({
+                x: player.x + player.width / 2 - 1.5,
+                y: player.y
+              });
+              playPew();
+            };
+            doFire();
+            invadersFireInterval = setInterval(doFire, 200);
           } else if (action === 'left' || action === 'right') {
             const movePlayer = () => {
               if (action === 'left' && player.x > 0) {
@@ -1976,9 +1996,17 @@
         };
 
         const stopAction = () => {
-          if (invadersMoveInterval) {
-            clearInterval(invadersMoveInterval);
-            invadersMoveInterval = null;
+          // Only stop the relevant interval
+          if (action === 'fire') {
+            if (invadersFireInterval) {
+              clearInterval(invadersFireInterval);
+              invadersFireInterval = null;
+            }
+          } else {
+            if (invadersMoveInterval) {
+              clearInterval(invadersMoveInterval);
+              invadersMoveInterval = null;
+            }
           }
         };
 
