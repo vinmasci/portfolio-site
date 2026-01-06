@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vincent Masci | Software Developer</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Melbourne-based software developer specializing in web and mobile apps. React, React Native, Next.js, Mapbox. Currently available for projects.">
+  <meta name="keywords" content="software developer, web developer, mobile apps, React, React Native, Next.js, Melbourne, iOS, Android">
+  <meta name="author" content="Vincent Masci">
+
+  <!-- Open Graph / Facebook / LinkedIn -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vincentmasci.dev/">
+  <meta property="og:title" content="Vincent Masci | Software Developer">
+  <meta property="og:description" content="Problem solver who loves to build. Apps, websites, tools — you name it. Currently available for projects.">
+  <meta property="og:image" content="https://vincentmasci.dev/og-image.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://vincentmasci.dev/">
+  <meta name="twitter:title" content="Vincent Masci | Software Developer">
+  <meta name="twitter:description" content="Problem solver who loves to build. Apps, websites, tools — you name it. Currently available for projects.">
+  <meta name="twitter:image" content="https://vincentmasci.dev/og-image.png">
+
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#0a0a0f">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
+
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBCHfCfDvEdcU1f9dJX12dXzVOsZMVnc1s",
+      authDomain: "cyaroutes.firebaseapp.com",
+      projectId: "cyaroutes",
+      storageBucket: "cyaroutes.firebasestorage.app",
+      messagingSenderId: "601003510442",
+      appId: "1:601003510442:web:a91daf9016922656a89ed3"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('contactForm');
+      const status = document.getElementById('formStatus');
+      const submitBtn = form.querySelector('.submit-btn');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('contactName').value;
+        const email = document.getElementById('contactEmail').value;
+        const message = document.getElementById('contactMessage').value;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'SENDING...';
+        status.textContent = '';
+        status.className = 'form-status';
+
+        try {
+          await addDoc(collection(db, 'contact_messages'), {
+            name,
+            email,
+            message,
+            source: 'portfolio_site',
+            status: 'new',
+            createdAt: serverTimestamp()
+          });
+
+          status.textContent = 'MESSAGE SENT!';
+          status.className = 'form-status success';
+          form.reset();
+        } catch (error) {
+          console.error('Error:', error);
+          status.textContent = 'ERROR SENDING. TRY AGAIN.';
+          status.className = 'form-status error';
+        }
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'SEND MESSAGE';
+      });
+    });
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0a0a0f;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Hero Section with Game */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+      background: linear-gradient(180deg, #0a0a0f 0%, #1a1a2e 100%);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(white 1px, transparent 1px);
+      background-size: 50px 50px;
+      opacity: 0.03;
+    }
+
+    .hero-title {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(1.2rem, 4vw, 2rem);
+      color: #00ff88;
+      text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+      margin-bottom: 0.5rem;
+      text-align: center;
+      animation: flicker 3s infinite;
+    }
+
+    .hero-subtitle {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(0.5rem, 1.5vw, 0.7rem);
+      color: #888;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      92% { opacity: 1; }
+      93% { opacity: 0.8; }
+      94% { opacity: 1; }
+      95% { opacity: 0.9; }
+    }
+
+    /* Game Container */
+    .game-wrapper {
+      position: relative;
+      border: 3px solid #00ff88;
+      border-radius: 8px;
+      box-shadow: 
+        0 0 30px rgba(0, 255, 136, 0.3),
+        inset 0 0 30px rgba(0, 255, 136, 0.05);
+      background: #000;
+    }
+
+    #gameCanvas {
+      display: block;
+    }
+
+    .game-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.85);
+      font-family: 'Press Start 2P', cursive;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .game-overlay.hidden {
+      display: none;
+    }
+
+    .game-overlay h2 {
+      color: #00ff88;
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    }
+
+    .game-overlay p {
+      color: #aaa;
+      font-size: clamp(0.4rem, 1.2vw, 0.6rem);
+      line-height: 2;
+      margin-bottom: 1.5rem;
+    }
+
+    .start-btn {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(0.5rem, 1.5vw, 0.7rem);
+      padding: 1rem 2rem;
+      background: transparent;
+      border: 2px solid #00ff88;
+      color: #00ff88;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+    }
+
+    .start-btn:hover {
+      background: #00ff88;
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    }
+
+    .score-display {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.8rem;
+      color: #00ff88;
+      margin-top: 1rem;
+      display: flex;
+      gap: 2rem;
+    }
+
+    .controls-hint {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.5rem;
+      color: #555;
+      margin-top: 1rem;
+    }
+
+    /* Game Tabs */
+    .game-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 0;
+    }
+
+    .game-tab {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.6rem;
+      padding: 0.75rem 1.5rem;
+      background: #1a1a2e;
+      border: 2px solid #333;
+      border-bottom: none;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 8px 8px 0 0;
+      margin-bottom: -2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .game-tab:hover {
+      color: #00ff88;
+      border-color: #00ff88;
+    }
+
+    .game-tab.active {
+      background: #000;
+      color: #00ff88;
+      border-color: #00ff88;
+      z-index: 2;
+    }
+
+    .game-container {
+      display: none;
+    }
+
+    .game-container.active {
+      display: block;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.5rem;
+      color: #444;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(10px); }
+    }
+
+    /* Content Sections */
+    .section {
+      padding: 6rem 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      color: #00ff88;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, #00ff88, transparent);
+    }
+
+    .about-text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #ccc;
+      margin-bottom: 2rem;
+    }
+
+    .about-text strong {
+      color: #00ff88;
+    }
+
+    .about-img {
+      float: left;
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-right: 1.5rem;
+      margin-bottom: 1rem;
+      border: 3px solid #00ff88;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+    }
+
+    .fortune-cookie {
+      clear: both;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid #2a2a4a;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .fortune-icon {
+      font-size: 2rem;
+    }
+
+    .fortune-text {
+      flex: 1;
+      font-style: italic;
+      color: #ccc;
+      font-size: 1rem;
+      line-height: 1.6;
+      min-width: 200px;
+    }
+
+    .fortune-btn {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid #00ff88;
+      color: #00ff88;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 4px;
+    }
+
+    .fortune-btn:hover {
+      background: #00ff88;
+      color: #000;
+    }
+
+    /* Projects Grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16162a 100%);
+      border: 1px solid #2a2a4a;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #00ff88, #00aaff);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .project-card:hover {
+      border-color: #00ff88;
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(0, 255, 136, 0.1);
+    }
+
+    .project-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .project-card h3 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.7rem;
+      color: #00ff88;
+      margin-bottom: 1rem;
+    }
+
+    .project-card p {
+      color: #999;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .project-card .tech {
+      font-size: 0.75rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
+    .project-card a {
+      display: inline-block;
+      margin-top: auto;
+      padding: 0.5rem 1rem;
+      color: #00ff88;
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-family: 'Press Start 2P', cursive;
+      border: 2px solid #00ff88;
+      border-radius: 4px;
+      transition: all 0.3s;
+      align-self: flex-start;
+    }
+
+    .project-card a:hover {
+      background: #00ff88;
+      color: #000;
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+    }
+
+    /* Skills */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    .skill-item::before {
+      content: '>';
+      color: #00ff88;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.5rem;
+    }
+
+    /* Contact */
+    .contact-wrapper {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    @media (max-width: 600px) {
+      .contact-wrapper {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 500px;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #2a2a4a;
+      border-radius: 4px;
+      padding: 0.875rem 1rem;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: #00ff88;
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+    }
+
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder {
+      color: #666;
+    }
+
+    .contact-form textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .submit-btn {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.7rem;
+      padding: 1rem 1.5rem;
+      background: transparent;
+      border: 2px solid #00ff88;
+      color: #00ff88;
+      cursor: pointer;
+      transition: all 0.3s;
+      align-self: flex-start;
+    }
+
+    .submit-btn:hover {
+      background: #00ff88;
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .form-status {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .form-status.success {
+      color: #00ff88;
+    }
+
+    .form-status.error {
+      color: #ff4444;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.3s;
+      padding: 0.75rem 1.25rem;
+      border: 1px solid #2a2a4a;
+      border-radius: 4px;
+    }
+
+    .contact-link:hover {
+      color: #00ff88;
+      border-color: #00ff88;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.5rem;
+      color: #333;
+    }
+
+    footer span {
+      color: #00ff88;
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero with Game -->
+  <section class="hero">
+    <h1 class="hero-title">VINCENT MASCI</h1>
+    <p class="hero-subtitle">SOFTWARE DEVELOPER • PRODUCT ENGINEER</p>
+    
+    <div class="game-tabs">
+      <button class="game-tab active" data-game="invaders">INVADERS</button>
+      <button class="game-tab" data-game="pong">PONG</button>
+      <button class="game-tab" data-game="snake">SNAKE</button>
+    </div>
+
+    <div class="game-wrapper">
+      <!-- Space Invaders -->
+      <div class="game-container active" id="invadersContainer">
+        <canvas id="gameCanvas" width="800" height="500"></canvas>
+        <div class="game-overlay" id="gameOverlay">
+          <h2>DEFEND YOUR CODE</h2>
+          <p>
+            ARROWS OR A/D TO MOVE<br>
+            SPACE TO SHOOT<br>
+            DESTROY THE BUGS
+          </p>
+          <button class="start-btn" id="startBtn">START GAME</button>
+        </div>
+      </div>
+
+      <!-- Pong -->
+      <div class="game-container" id="pongContainer">
+        <canvas id="pongCanvas" width="800" height="500"></canvas>
+        <div class="game-overlay" id="pongOverlay">
+          <h2>PONG</h2>
+          <p>
+            W/S OR ARROWS TO MOVE<br>
+            FIRST TO 5 WINS
+          </p>
+          <button class="start-btn" id="pongStartBtn">START GAME</button>
+        </div>
+      </div>
+
+      <!-- Snake -->
+      <div class="game-container" id="snakeContainer">
+        <canvas id="snakeCanvas" width="800" height="500"></canvas>
+        <div class="game-overlay" id="snakeOverlay">
+          <h2>SNAKE</h2>
+          <p>
+            ARROWS OR WASD TO MOVE<br>
+            EAT FOOD TO GROW<br>
+            DON'T HIT YOURSELF
+          </p>
+          <button class="start-btn" id="snakeStartBtn">START GAME</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="score-display" id="invadersScore">
+      <span>SCORE: <span id="score">0</span></span>
+      <span>LIVES: <span id="lives">3</span></span>
+    </div>
+
+    <div class="score-display" id="pongScore" style="display: none;">
+      <span>YOU: <span id="playerScore">0</span></span>
+      <span>CPU: <span id="cpuScore">0</span></span>
+    </div>
+
+    <div class="score-display" id="snakeScore" style="display: none;">
+      <span>SCORE: <span id="snakeScoreVal">0</span></span>
+      <span>HIGH: <span id="snakeHighScore">0</span></span>
+    </div>
+
+    <p class="controls-hint" id="invadersHint">← → or A/D to move • SPACE to fire</p>
+    <p class="controls-hint" id="pongHint" style="display: none;">W/S or ↑/↓ to move paddle</p>
+    <p class="controls-hint" id="snakeHint" style="display: none;">Arrow keys or WASD to move</p>
+    
+    <div class="scroll-hint">↓ SCROLL FOR MORE ↓</div>
+  </section>
+
+  <!-- About Section -->
+  <section class="section">
+    <h2 class="section-title">ABOUT</h2>
+    <img src="vincentmasci.png" alt="Vincent Masci" class="about-img">
+    <p class="about-text">
+      I'm a <strong>problem solver who loves to build</strong>. Apps, websites, tools — you name it, I'm into it. I ship fast using AI-assisted development and thrive on turning ideas into real, deployed products.
+    </p>
+    <p class="about-text">
+      I care about <strong>clear UX</strong>, fast iteration, and making things that people actually want to use. If there's a problem worth solving, I want to build the solution.
+    </p>
+    <p class="about-text">
+      <strong>Currently available for projects</strong> — got an idea? Let's build it.
+    </p>
+
+    <div class="fortune-cookie">
+      <span class="fortune-icon">🥠</span>
+      <p class="fortune-text" id="fortuneText">Loading fortune...</p>
+      <button class="fortune-btn" id="newFortuneBtn">New Fortune</button>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section class="section">
+    <h2 class="section-title">PROJECTS</h2>
+    <div class="projects-grid">
+      <div class="project-card">
+        <h3>VICBUG</h3>
+        <p>Victoria's cycling navigation app. Route builder with safety/speed priority, real-time hazard alerts, 48hr wind forecasts, rain radar, and live train times. Export to Garmin/Wahoo. Free, not-for-profit.</p>
+        <div class="tech">iOS • Android • Next.js • React Native • Mapbox</div>
+        <a href="https://www.vicbug.app" target="_blank">Visit</a>
+      </div>
+      <div class="project-card">
+        <h3>RUNGPT</h3>
+        <p>AI-powered running coach. Chat interface for personalised training advice, race planning, and running questions. Built with Next.js and OpenAI.</p>
+        <div class="tech">Next.js • React • OpenAI • Vercel</div>
+        <a href="https://rungpt-web.vercel.app" target="_blank">Visit</a>
+      </div>
+      <div class="project-card">
+        <h3>CYAROUTES</h3>
+        <p>Discover and share cycling routes across Australia. Community platform for riders to explore trails and connect with other cyclists.</p>
+        <div class="tech">JavaScript • Mapbox</div>
+        <a href="https://www.cyaroutes.com.au" target="_blank">Visit</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section class="section">
+    <h2 class="section-title">SKILLS</h2>
+    <div class="skills-grid">
+      <div class="skill-item">JavaScript / TypeScript</div>
+      <div class="skill-item">React / Next.js</div>
+      <div class="skill-item">React Native (iOS & Android)</div>
+      <div class="skill-item">Node.js</div>
+      <div class="skill-item">Mapbox / Apple MapKit</div>
+      <div class="skill-item">Firebase / Supabase</div>
+      <div class="skill-item">AI-Assisted Development</div>
+      <div class="skill-item">UI/UX Design</div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="section">
+    <h2 class="section-title">CONTACT</h2>
+    <div class="contact-wrapper">
+      <form id="contactForm" class="contact-form">
+        <input type="text" id="contactName" placeholder="Your name" required>
+        <input type="email" id="contactEmail" placeholder="Your email" required>
+        <textarea id="contactMessage" placeholder="Your message" rows="4" required></textarea>
+        <button type="submit" class="submit-btn">SEND MESSAGE</button>
+        <p id="formStatus" class="form-status"></p>
+      </form>
+      <div class="contact-links">
+        <a href="https://www.linkedin.com/in/vincent-masci-645254391/" target="_blank" class="contact-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://www.vicbug.app" target="_blank" class="contact-link">
+          <span style="background: #aaa; border-radius: 4px; padding: 2px; display: inline-flex; align-items: center; justify-content: center;">
+            <img src="VICBUGLOGO.png" alt="VicBUG" style="width: 16px; height: 16px; object-fit: contain;">
+          </span>
+          VicBUG
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    BUILT WITH <span>&lt;CODE/&gt;</span> AND <span>☕</span> IN MELBOURNE
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const overlay = document.getElementById('gameOverlay');
+    const startBtn = document.getElementById('startBtn');
+    const scoreDisplay = document.getElementById('score');
+    const livesDisplay = document.getElementById('lives');
+
+    // Game state
+    let gameRunning = false;
+    let score = 0;
+    let lives = 3;
+
+    // Player
+    const player = {
+      x: canvas.width / 2 - 20,
+      y: canvas.height - 50,
+      width: 40,
+      height: 20,
+      speed: 6
+    };
+
+    // Bullets
+    let bullets = [];
+    const bulletSpeed = 8;
+
+    // Enemies (bugs)
+    let enemies = [];
+    const enemyRows = 5;
+    const enemyCols = 10;
+    let enemyDirection = 1;
+    let enemySpeed = 1;
+
+    // Enemy bullets
+    let enemyBullets = [];
+
+    // Controls
+    const keys = {};
+
+    // Alien Type 1: Bug (red)
+    function drawBug(x, y, size, frame) {
+      ctx.fillStyle = '#ff4444';
+      // Body
+      ctx.fillRect(x + size * 0.2, y + size * 0.3, size * 0.6, size * 0.4);
+      // Head
+      ctx.fillRect(x + size * 0.3, y + size * 0.1, size * 0.4, size * 0.3);
+      // Legs (animated)
+      const legOffset = frame ? size * 0.1 : 0;
+      ctx.fillRect(x, y + size * 0.5 + legOffset, size * 0.2, size * 0.3);
+      ctx.fillRect(x + size * 0.8, y + size * 0.5 - legOffset, size * 0.2, size * 0.3);
+      // Eyes
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(x + size * 0.3, y + size * 0.2, size * 0.1, size * 0.1);
+      ctx.fillRect(x + size * 0.6, y + size * 0.2, size * 0.1, size * 0.1);
+    }
+
+    // Alien Type 2: Squid (purple)
+    function drawSquid(x, y, size, frame) {
+      ctx.fillStyle = '#aa44ff';
+      // Head (dome)
+      ctx.fillRect(x + size * 0.2, y + size * 0.1, size * 0.6, size * 0.4);
+      ctx.fillRect(x + size * 0.3, y, size * 0.4, size * 0.2);
+      // Tentacles (animated)
+      const tentacleOffset = frame ? size * 0.05 : -size * 0.05;
+      ctx.fillRect(x + size * 0.1, y + size * 0.5, size * 0.15, size * 0.35 + tentacleOffset);
+      ctx.fillRect(x + size * 0.3, y + size * 0.5, size * 0.15, size * 0.4 - tentacleOffset);
+      ctx.fillRect(x + size * 0.55, y + size * 0.5, size * 0.15, size * 0.4 - tentacleOffset);
+      ctx.fillRect(x + size * 0.75, y + size * 0.5, size * 0.15, size * 0.35 + tentacleOffset);
+      // Eyes
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(x + size * 0.3, y + size * 0.25, size * 0.12, size * 0.12);
+      ctx.fillRect(x + size * 0.58, y + size * 0.25, size * 0.12, size * 0.12);
+    }
+
+    // Alien Type 3: Crab (orange)
+    function drawCrab(x, y, size, frame) {
+      ctx.fillStyle = '#ff8844';
+      // Body
+      ctx.fillRect(x + size * 0.15, y + size * 0.3, size * 0.7, size * 0.4);
+      // Claws (animated)
+      const clawOffset = frame ? size * 0.1 : 0;
+      ctx.fillRect(x - size * 0.1 + clawOffset, y + size * 0.2, size * 0.25, size * 0.25);
+      ctx.fillRect(x + size * 0.85 - clawOffset, y + size * 0.2, size * 0.25, size * 0.25);
+      // Legs
+      ctx.fillRect(x + size * 0.2, y + size * 0.7, size * 0.15, size * 0.2);
+      ctx.fillRect(x + size * 0.65, y + size * 0.7, size * 0.15, size * 0.2);
+      // Eyes on stalks
+      ctx.fillRect(x + size * 0.3, y + size * 0.1, size * 0.1, size * 0.25);
+      ctx.fillRect(x + size * 0.6, y + size * 0.1, size * 0.1, size * 0.25);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(x + size * 0.28, y + size * 0.05, size * 0.14, size * 0.1);
+      ctx.fillRect(x + size * 0.58, y + size * 0.05, size * 0.14, size * 0.1);
+    }
+
+    // Alien Type 4: Skull (cyan) - top row boss type
+    function drawSkull(x, y, size, frame) {
+      ctx.fillStyle = '#44ffff';
+      // Skull shape
+      ctx.fillRect(x + size * 0.2, y + size * 0.1, size * 0.6, size * 0.5);
+      ctx.fillRect(x + size * 0.3, y, size * 0.4, size * 0.15);
+      // Jaw (animated)
+      const jawOffset = frame ? size * 0.05 : 0;
+      ctx.fillRect(x + size * 0.25, y + size * 0.6 + jawOffset, size * 0.5, size * 0.2);
+      // Eye sockets
+      ctx.fillStyle = '#000';
+      ctx.fillRect(x + size * 0.28, y + size * 0.2, size * 0.18, size * 0.2);
+      ctx.fillRect(x + size * 0.54, y + size * 0.2, size * 0.18, size * 0.2);
+      // Glowing eyes
+      ctx.fillStyle = '#ff0044';
+      ctx.fillRect(x + size * 0.32, y + size * 0.25, size * 0.1, size * 0.1);
+      ctx.fillRect(x + size * 0.58, y + size * 0.25, size * 0.1, size * 0.1);
+      // Nose hole
+      ctx.fillStyle = '#000';
+      ctx.fillRect(x + size * 0.42, y + size * 0.42, size * 0.16, size * 0.12);
+    }
+
+    // Alien Type 5: Ghost (yellow)
+    function drawGhost(x, y, size, frame) {
+      ctx.fillStyle = '#ffdd00';
+      // Head (rounded top)
+      ctx.fillRect(x + size * 0.2, y + size * 0.1, size * 0.6, size * 0.5);
+      ctx.fillRect(x + size * 0.3, y, size * 0.4, size * 0.15);
+      // Body
+      ctx.fillRect(x + size * 0.15, y + size * 0.4, size * 0.7, size * 0.35);
+      // Wavy bottom (animated)
+      const waveOffset = frame ? 0 : size * 0.08;
+      ctx.fillRect(x + size * 0.15, y + size * 0.75, size * 0.18, size * 0.15 + waveOffset);
+      ctx.fillRect(x + size * 0.41, y + size * 0.75, size * 0.18, size * 0.2 - waveOffset);
+      ctx.fillRect(x + size * 0.67, y + size * 0.75, size * 0.18, size * 0.15 + waveOffset);
+      // Spooky eyes
+      ctx.fillStyle = '#000';
+      ctx.fillRect(x + size * 0.28, y + size * 0.25, size * 0.15, size * 0.2);
+      ctx.fillRect(x + size * 0.57, y + size * 0.25, size * 0.15, size * 0.2);
+      // Mouth (open o)
+      ctx.fillRect(x + size * 0.4, y + size * 0.5, size * 0.2, size * 0.15);
+    }
+
+    // Draw enemy based on type
+    function drawEnemy(enemy) {
+      switch(enemy.type) {
+        case 0: drawSkull(enemy.x, enemy.y, enemy.width, enemy.frame); break;
+        case 1: drawSquid(enemy.x, enemy.y, enemy.width, enemy.frame); break;
+        case 2: drawCrab(enemy.x, enemy.y, enemy.width, enemy.frame); break;
+        case 3: drawBug(enemy.x, enemy.y, enemy.width, enemy.frame); break;
+        case 4: drawGhost(enemy.x, enemy.y, enemy.width, enemy.frame); break;
+        default: drawBug(enemy.x, enemy.y, enemy.width, enemy.frame); break;
+      }
+    }
+
+    // Initialize enemies
+    function initEnemies() {
+      enemies = [];
+      for (let row = 0; row < enemyRows; row++) {
+        for (let col = 0; col < enemyCols; col++) {
+          enemies.push({
+            x: 80 + col * 65,
+            y: 50 + row * 50,
+            width: 40,
+            height: 40,
+            alive: true,
+            frame: Math.random() > 0.5,
+            type: Math.floor(Math.random() * 5)  // Random: 0-4 (Skull, Squid, Crab, Bug, Spider)
+          });
+        }
+      }
+    }
+
+    // Draw player (spaceship/cursor)
+    function drawPlayer() {
+      ctx.fillStyle = '#00ff88';
+      // Ship body
+      ctx.beginPath();
+      ctx.moveTo(player.x + player.width / 2, player.y);
+      ctx.lineTo(player.x + player.width, player.y + player.height);
+      ctx.lineTo(player.x, player.y + player.height);
+      ctx.closePath();
+      ctx.fill();
+      // Glow effect
+      ctx.shadowColor = '#00ff88';
+      ctx.shadowBlur = 10;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    // Draw bullet
+    function drawBullet(bullet, isEnemy = false) {
+      ctx.fillStyle = isEnemy ? '#ff4444' : '#00ff88';
+      ctx.shadowColor = isEnemy ? '#ff4444' : '#00ff88';
+      ctx.shadowBlur = 5;
+      ctx.fillRect(bullet.x, bullet.y, 3, 10);
+      ctx.shadowBlur = 0;
+    }
+
+    // Update game
+    let frameCount = 0;
+    function update() {
+      if (!gameRunning) return;
+
+      frameCount++;
+
+      // Move player
+      if ((keys['ArrowLeft'] || keys['KeyA']) && player.x > 0) {
+        player.x -= player.speed;
+      }
+      if ((keys['ArrowRight'] || keys['KeyD']) && player.x < canvas.width - player.width) {
+        player.x += player.speed;
+      }
+
+      // Update bullets
+      bullets = bullets.filter(b => {
+        b.y -= bulletSpeed;
+        return b.y > 0;
+      });
+
+      // Update enemy bullets
+      enemyBullets = enemyBullets.filter(b => {
+        b.y += 4;
+        return b.y < canvas.height;
+      });
+
+      // Move enemies
+      let shouldDrop = false;
+      enemies.forEach(enemy => {
+        if (!enemy.alive) return;
+        enemy.x += enemyDirection * enemySpeed;
+        if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
+          shouldDrop = true;
+        }
+      });
+
+      if (shouldDrop) {
+        enemyDirection *= -1;
+        enemies.forEach(enemy => {
+          enemy.y += 10;
+          if (enemy.alive && enemy.y + enemy.height >= player.y) {
+            gameOver();
+          }
+        });
+      }
+
+      // Animate enemies
+      if (frameCount % 30 === 0) {
+        enemies.forEach(e => e.frame = !e.frame);
+      }
+
+      // Enemy shooting
+      if (frameCount % 60 === 0) {
+        const aliveEnemies = enemies.filter(e => e.alive);
+        if (aliveEnemies.length > 0) {
+          const shooter = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+          enemyBullets.push({
+            x: shooter.x + shooter.width / 2,
+            y: shooter.y + shooter.height
+          });
+        }
+      }
+
+      // Collision detection - bullets hitting enemies
+      bullets.forEach(bullet => {
+        enemies.forEach(enemy => {
+          if (enemy.alive &&
+              bullet.x < enemy.x + enemy.width &&
+              bullet.x + 3 > enemy.x &&
+              bullet.y < enemy.y + enemy.height &&
+              bullet.y + 10 > enemy.y) {
+            enemy.alive = false;
+            bullet.y = -100;
+            score += 10;
+            scoreDisplay.textContent = score;
+            
+            // Speed up as enemies die
+            const aliveCount = enemies.filter(e => e.alive).length;
+            enemySpeed = 1 + (50 - aliveCount) * 0.04;
+          }
+        });
+      });
+
+      // Collision detection - enemy bullets hitting player
+      enemyBullets.forEach(bullet => {
+        if (bullet.x < player.x + player.width &&
+            bullet.x + 3 > player.x &&
+            bullet.y < player.y + player.height &&
+            bullet.y + 10 > player.y) {
+          bullet.y = canvas.height + 100;
+          lives--;
+          livesDisplay.textContent = lives;
+          if (lives <= 0) {
+            gameOver();
+          }
+        }
+      });
+
+      // Check win condition
+      if (enemies.every(e => !e.alive)) {
+        nextLevel();
+      }
+    }
+
+    // Draw game
+    function draw() {
+      // Clear canvas
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw grid lines (subtle)
+      ctx.strokeStyle = 'rgba(0, 255, 136, 0.03)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < canvas.width; i += 30) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, canvas.height);
+        ctx.stroke();
+      }
+      for (let i = 0; i < canvas.height; i += 30) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(canvas.width, i);
+        ctx.stroke();
+      }
+
+      // Draw enemies
+      enemies.forEach(enemy => {
+        if (enemy.alive) {
+          drawEnemy(enemy);
+        }
+      });
+
+      // Draw player
+      drawPlayer();
+
+      // Draw bullets
+      bullets.forEach(b => drawBullet(b));
+      enemyBullets.forEach(b => drawBullet(b, true));
+    }
+
+    // Game loop
+    function gameLoop() {
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Start game
+    function startGame() {
+      gameRunning = true;
+      score = 0;
+      lives = 3;
+      enemySpeed = 1;
+      scoreDisplay.textContent = score;
+      livesDisplay.textContent = lives;
+      bullets = [];
+      enemyBullets = [];
+      player.x = canvas.width / 2 - 20;
+      initEnemies();
+      overlay.classList.add('hidden');
+    }
+
+    // Next level
+    function nextLevel() {
+      enemySpeed = 1;
+      bullets = [];
+      enemyBullets = [];
+      initEnemies();
+    }
+
+    // Game over
+    let gameOverTransition = false;
+    function gameOver() {
+      if (gameOverTransition) return;
+      gameOverTransition = true;
+      gameRunning = false;
+
+      // Flash effect before showing game over
+      let flashes = 0;
+      const flashInterval = setInterval(() => {
+        ctx.fillStyle = flashes % 2 === 0 ? 'rgba(255, 0, 0, 0.3)' : 'rgba(0, 0, 0, 1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        flashes++;
+        if (flashes >= 6) {
+          clearInterval(flashInterval);
+          overlay.querySelector('h2').textContent = 'GAME OVER';
+          overlay.querySelector('p').innerHTML = `FINAL SCORE: ${score}<br><br>ARROWS OR A/D TO MOVE<br>SPACE TO SHOOT`;
+          startBtn.textContent = 'PLAY AGAIN';
+          overlay.classList.remove('hidden');
+          gameOverTransition = false;
+        }
+      }, 100);
+    }
+
+    // Event listeners
+    startBtn.addEventListener('click', startGame);
+
+    document.addEventListener('keydown', (e) => {
+      keys[e.code] = true;
+
+      // Prevent scroll for game keys when game area is in view
+      const gameKeys = ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+      if (gameKeys.includes(e.code)) {
+        const rect = canvas.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (inView) {
+          e.preventDefault();
+        }
+      }
+
+      // Shooting
+      if (e.code === 'Space' && gameRunning) {
+        bullets.push({
+          x: player.x + player.width / 2 - 1.5,
+          y: player.y
+        });
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      keys[e.code] = false;
+    });
+
+    // Initialize
+    initEnemies();
+    draw();
+    gameLoop();
+
+    // ============================================
+    // PONG GAME
+    // ============================================
+    const pongCanvas = document.getElementById('pongCanvas');
+    const pongCtx = pongCanvas.getContext('2d');
+    const pongOverlay = document.getElementById('pongOverlay');
+    const pongStartBtn = document.getElementById('pongStartBtn');
+    const playerScoreDisplay = document.getElementById('playerScore');
+    const cpuScoreDisplay = document.getElementById('cpuScore');
+
+    let pongRunning = false;
+    let playerPaddleScore = 0;
+    let cpuPaddleScore = 0;
+
+    // Paddles
+    const paddleWidth = 12;
+    const paddleHeight = 80;
+    const paddleSpeed = 7;
+
+    const playerPaddle = {
+      x: 30,
+      y: pongCanvas.height / 2 - paddleHeight / 2,
+      width: paddleWidth,
+      height: paddleHeight,
+      dy: 0
+    };
+
+    const cpuPaddle = {
+      x: pongCanvas.width - 30 - paddleWidth,
+      y: pongCanvas.height / 2 - paddleHeight / 2,
+      width: paddleWidth,
+      height: paddleHeight,
+      speed: 4
+    };
+
+    // Ball
+    const ball = {
+      x: pongCanvas.width / 2,
+      y: pongCanvas.height / 2,
+      radius: 8,
+      speedX: 6,
+      speedY: 4,
+      dx: 6,
+      dy: 4
+    };
+
+    // Pong keys
+    const pongKeys = {};
+
+    function resetBall(direction) {
+      ball.x = pongCanvas.width / 2;
+      ball.y = pongCanvas.height / 2;
+      ball.dx = direction * ball.speedX;
+      ball.dy = (Math.random() > 0.5 ? 1 : -1) * ball.speedY;
+    }
+
+    function updatePong() {
+      if (!pongRunning) return;
+
+      // Player paddle movement
+      if (pongKeys['KeyW'] || pongKeys['ArrowUp']) {
+        playerPaddle.y -= paddleSpeed;
+      }
+      if (pongKeys['KeyS'] || pongKeys['ArrowDown']) {
+        playerPaddle.y += paddleSpeed;
+      }
+
+      // Keep player paddle in bounds
+      playerPaddle.y = Math.max(0, Math.min(pongCanvas.height - playerPaddle.height, playerPaddle.y));
+
+      // CPU AI - follows ball with some delay
+      const cpuCenter = cpuPaddle.y + cpuPaddle.height / 2;
+      const targetY = ball.y;
+      if (cpuCenter < targetY - 20) {
+        cpuPaddle.y += cpuPaddle.speed;
+      } else if (cpuCenter > targetY + 20) {
+        cpuPaddle.y -= cpuPaddle.speed;
+      }
+      cpuPaddle.y = Math.max(0, Math.min(pongCanvas.height - cpuPaddle.height, cpuPaddle.y));
+
+      // Ball movement
+      ball.x += ball.dx;
+      ball.y += ball.dy;
+
+      // Ball collision with top/bottom
+      if (ball.y - ball.radius <= 0 || ball.y + ball.radius >= pongCanvas.height) {
+        ball.dy *= -1;
+      }
+
+      // Ball collision with player paddle
+      if (ball.x - ball.radius <= playerPaddle.x + playerPaddle.width &&
+          ball.x + ball.radius >= playerPaddle.x &&
+          ball.y >= playerPaddle.y &&
+          ball.y <= playerPaddle.y + playerPaddle.height) {
+        ball.dx = Math.abs(ball.dx) * 1.05; // Speed up slightly
+        // Add angle based on where it hit the paddle
+        const hitPos = (ball.y - playerPaddle.y) / playerPaddle.height;
+        ball.dy = (hitPos - 0.5) * 10;
+      }
+
+      // Ball collision with CPU paddle
+      if (ball.x + ball.radius >= cpuPaddle.x &&
+          ball.x - ball.radius <= cpuPaddle.x + cpuPaddle.width &&
+          ball.y >= cpuPaddle.y &&
+          ball.y <= cpuPaddle.y + cpuPaddle.height) {
+        ball.dx = -Math.abs(ball.dx) * 1.05;
+        const hitPos = (ball.y - cpuPaddle.y) / cpuPaddle.height;
+        ball.dy = (hitPos - 0.5) * 10;
+      }
+
+      // Scoring
+      if (ball.x < 0) {
+        cpuPaddleScore++;
+        cpuScoreDisplay.textContent = cpuPaddleScore;
+        if (cpuPaddleScore >= 5) {
+          pongGameOver(false);
+        } else {
+          resetBall(1);
+        }
+      }
+      if (ball.x > pongCanvas.width) {
+        playerPaddleScore++;
+        playerScoreDisplay.textContent = playerPaddleScore;
+        if (playerPaddleScore >= 5) {
+          pongGameOver(true);
+        } else {
+          resetBall(-1);
+        }
+      }
+    }
+
+    function drawPong() {
+      // Clear
+      pongCtx.fillStyle = '#000';
+      pongCtx.fillRect(0, 0, pongCanvas.width, pongCanvas.height);
+
+      // Draw center line
+      pongCtx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+      pongCtx.setLineDash([10, 10]);
+      pongCtx.beginPath();
+      pongCtx.moveTo(pongCanvas.width / 2, 0);
+      pongCtx.lineTo(pongCanvas.width / 2, pongCanvas.height);
+      pongCtx.stroke();
+      pongCtx.setLineDash([]);
+
+      // Draw paddles
+      pongCtx.fillStyle = '#00ff88';
+      pongCtx.shadowColor = '#00ff88';
+      pongCtx.shadowBlur = 10;
+      pongCtx.fillRect(playerPaddle.x, playerPaddle.y, playerPaddle.width, playerPaddle.height);
+
+      pongCtx.fillStyle = '#ff4444';
+      pongCtx.shadowColor = '#ff4444';
+      pongCtx.fillRect(cpuPaddle.x, cpuPaddle.y, cpuPaddle.width, cpuPaddle.height);
+
+      // Draw ball
+      pongCtx.fillStyle = '#fff';
+      pongCtx.shadowColor = '#fff';
+      pongCtx.shadowBlur = 15;
+      pongCtx.beginPath();
+      pongCtx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+      pongCtx.fill();
+      pongCtx.shadowBlur = 0;
+    }
+
+    function pongGameLoop() {
+      updatePong();
+      drawPong();
+      requestAnimationFrame(pongGameLoop);
+    }
+
+    function startPong() {
+      pongRunning = true;
+      playerPaddleScore = 0;
+      cpuPaddleScore = 0;
+      playerScoreDisplay.textContent = '0';
+      cpuScoreDisplay.textContent = '0';
+      playerPaddle.y = pongCanvas.height / 2 - paddleHeight / 2;
+      cpuPaddle.y = pongCanvas.height / 2 - paddleHeight / 2;
+      ball.speedX = 6;
+      ball.speedY = 4;
+      resetBall(Math.random() > 0.5 ? 1 : -1);
+      pongOverlay.classList.add('hidden');
+    }
+
+    function pongGameOver(playerWon) {
+      pongRunning = false;
+      pongOverlay.querySelector('h2').textContent = playerWon ? 'YOU WIN!' : 'CPU WINS';
+      pongOverlay.querySelector('p').innerHTML = `FINAL SCORE: ${playerPaddleScore} - ${cpuPaddleScore}<br><br>W/S OR ARROWS TO MOVE`;
+      pongStartBtn.textContent = 'PLAY AGAIN';
+      pongOverlay.classList.remove('hidden');
+    }
+
+    pongStartBtn.addEventListener('click', startPong);
+
+    document.addEventListener('keydown', (e) => {
+      pongKeys[e.code] = true;
+
+      // Prevent scroll for pong keys
+      if (['KeyW', 'KeyS', 'ArrowUp', 'ArrowDown'].includes(e.code)) {
+        const rect = pongCanvas.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (inView && document.getElementById('pongContainer').classList.contains('active')) {
+          e.preventDefault();
+        }
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      pongKeys[e.code] = false;
+    });
+
+    // Initialize Pong
+    drawPong();
+    pongGameLoop();
+
+    // ============================================
+    // SNAKE GAME
+    // ============================================
+    const snakeCanvas = document.getElementById('snakeCanvas');
+    const snakeCtx = snakeCanvas.getContext('2d');
+    const snakeOverlay = document.getElementById('snakeOverlay');
+    const snakeStartBtn = document.getElementById('snakeStartBtn');
+    const snakeScoreDisplay = document.getElementById('snakeScoreVal');
+    const snakeHighScoreDisplay = document.getElementById('snakeHighScore');
+
+    const gridSize = 20;
+    const gridWidth = snakeCanvas.width / gridSize;
+    const gridHeight = snakeCanvas.height / gridSize;
+
+    let snakeRunning = false;
+    let snakeScore = 0;
+    let snakeHighScore = 0;
+    let snake = [];
+    let snakeDir = { x: 1, y: 0 };
+    let nextDir = { x: 1, y: 0 };
+    let food = { x: 0, y: 0 };
+    let snakeSpeed = 100;
+    let lastSnakeUpdate = 0;
+
+    function initSnake() {
+      snake = [
+        { x: Math.floor(gridWidth / 2), y: Math.floor(gridHeight / 2) },
+        { x: Math.floor(gridWidth / 2) - 1, y: Math.floor(gridHeight / 2) },
+        { x: Math.floor(gridWidth / 2) - 2, y: Math.floor(gridHeight / 2) }
+      ];
+      snakeDir = { x: 1, y: 0 };
+      nextDir = { x: 1, y: 0 };
+      spawnFood();
+    }
+
+    function spawnFood() {
+      do {
+        food.x = Math.floor(Math.random() * gridWidth);
+        food.y = Math.floor(Math.random() * gridHeight);
+      } while (snake.some(seg => seg.x === food.x && seg.y === food.y));
+    }
+
+    function updateSnake(timestamp) {
+      if (!snakeRunning) return;
+
+      if (timestamp - lastSnakeUpdate < snakeSpeed) return;
+      lastSnakeUpdate = timestamp;
+
+      // Apply queued direction
+      snakeDir = { ...nextDir };
+
+      // Calculate new head position
+      const head = { x: snake[0].x + snakeDir.x, y: snake[0].y + snakeDir.y };
+
+      // Wall collision (wrap around)
+      if (head.x < 0) head.x = gridWidth - 1;
+      if (head.x >= gridWidth) head.x = 0;
+      if (head.y < 0) head.y = gridHeight - 1;
+      if (head.y >= gridHeight) head.y = 0;
+
+      // Self collision
+      if (snake.some(seg => seg.x === head.x && seg.y === head.y)) {
+        snakeGameOver();
+        return;
+      }
+
+      // Add new head
+      snake.unshift(head);
+
+      // Check food
+      if (head.x === food.x && head.y === food.y) {
+        snakeScore += 10;
+        snakeScoreDisplay.textContent = snakeScore;
+        // Speed up slightly
+        snakeSpeed = Math.max(50, snakeSpeed - 2);
+        spawnFood();
+      } else {
+        // Remove tail if no food eaten
+        snake.pop();
+      }
+    }
+
+    function drawSnake() {
+      // Clear
+      snakeCtx.fillStyle = '#000';
+      snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+      // Draw grid (subtle)
+      snakeCtx.strokeStyle = 'rgba(0, 255, 136, 0.05)';
+      snakeCtx.lineWidth = 1;
+      for (let i = 0; i <= gridWidth; i++) {
+        snakeCtx.beginPath();
+        snakeCtx.moveTo(i * gridSize, 0);
+        snakeCtx.lineTo(i * gridSize, snakeCanvas.height);
+        snakeCtx.stroke();
+      }
+      for (let i = 0; i <= gridHeight; i++) {
+        snakeCtx.beginPath();
+        snakeCtx.moveTo(0, i * gridSize);
+        snakeCtx.lineTo(snakeCanvas.width, i * gridSize);
+        snakeCtx.stroke();
+      }
+
+      // Draw food
+      snakeCtx.fillStyle = '#ff4444';
+      snakeCtx.shadowColor = '#ff4444';
+      snakeCtx.shadowBlur = 10;
+      snakeCtx.beginPath();
+      snakeCtx.arc(
+        food.x * gridSize + gridSize / 2,
+        food.y * gridSize + gridSize / 2,
+        gridSize / 2 - 2,
+        0,
+        Math.PI * 2
+      );
+      snakeCtx.fill();
+
+      // Draw snake
+      snake.forEach((seg, i) => {
+        const isHead = i === 0;
+        snakeCtx.fillStyle = isHead ? '#00ff88' : '#00cc66';
+        snakeCtx.shadowColor = '#00ff88';
+        snakeCtx.shadowBlur = isHead ? 15 : 5;
+        snakeCtx.fillRect(
+          seg.x * gridSize + 1,
+          seg.y * gridSize + 1,
+          gridSize - 2,
+          gridSize - 2
+        );
+      });
+
+      snakeCtx.shadowBlur = 0;
+    }
+
+    function snakeGameLoop(timestamp) {
+      updateSnake(timestamp);
+      drawSnake();
+      requestAnimationFrame(snakeGameLoop);
+    }
+
+    function startSnake() {
+      snakeRunning = true;
+      snakeScore = 0;
+      snakeSpeed = 100;
+      snakeScoreDisplay.textContent = '0';
+      initSnake();
+      snakeOverlay.classList.add('hidden');
+    }
+
+    function snakeGameOver() {
+      snakeRunning = false;
+      if (snakeScore > snakeHighScore) {
+        snakeHighScore = snakeScore;
+        snakeHighScoreDisplay.textContent = snakeHighScore;
+      }
+      snakeOverlay.querySelector('h2').textContent = 'GAME OVER';
+      snakeOverlay.querySelector('p').innerHTML = `SCORE: ${snakeScore}<br><br>ARROWS OR WASD TO MOVE`;
+      snakeStartBtn.textContent = 'PLAY AGAIN';
+      snakeOverlay.classList.remove('hidden');
+    }
+
+    snakeStartBtn.addEventListener('click', startSnake);
+
+    document.addEventListener('keydown', (e) => {
+      if (!snakeRunning) return;
+      if (!document.getElementById('snakeContainer').classList.contains('active')) return;
+
+      // Prevent scroll
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(e.code)) {
+        e.preventDefault();
+      }
+
+      // Direction changes (can't reverse)
+      if ((e.code === 'ArrowUp' || e.code === 'KeyW') && snakeDir.y !== 1) {
+        nextDir = { x: 0, y: -1 };
+      } else if ((e.code === 'ArrowDown' || e.code === 'KeyS') && snakeDir.y !== -1) {
+        nextDir = { x: 0, y: 1 };
+      } else if ((e.code === 'ArrowLeft' || e.code === 'KeyA') && snakeDir.x !== 1) {
+        nextDir = { x: -1, y: 0 };
+      } else if ((e.code === 'ArrowRight' || e.code === 'KeyD') && snakeDir.x !== -1) {
+        nextDir = { x: 1, y: 0 };
+      }
+    });
+
+    // Initialize Snake
+    initSnake();
+    drawSnake();
+    requestAnimationFrame(snakeGameLoop);
+
+    // ============================================
+    // TAB SWITCHING
+    // ============================================
+    const gameTabs = document.querySelectorAll('.game-tab');
+    const invadersContainer = document.getElementById('invadersContainer');
+    const pongContainer = document.getElementById('pongContainer');
+    const snakeContainer = document.getElementById('snakeContainer');
+    const invadersScoreEl = document.getElementById('invadersScore');
+    const pongScoreEl = document.getElementById('pongScore');
+    const snakeScoreEl = document.getElementById('snakeScore');
+    const invadersHint = document.getElementById('invadersHint');
+    const pongHint = document.getElementById('pongHint');
+    const snakeHint = document.getElementById('snakeHint');
+
+    gameTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const game = tab.dataset.game;
+
+        // Update tab styles
+        gameTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Hide all
+        invadersContainer.classList.remove('active');
+        pongContainer.classList.remove('active');
+        snakeContainer.classList.remove('active');
+        invadersScoreEl.style.display = 'none';
+        pongScoreEl.style.display = 'none';
+        snakeScoreEl.style.display = 'none';
+        invadersHint.style.display = 'none';
+        pongHint.style.display = 'none';
+        snakeHint.style.display = 'none';
+
+        // Show selected
+        if (game === 'invaders') {
+          invadersContainer.classList.add('active');
+          invadersScoreEl.style.display = 'flex';
+          invadersHint.style.display = 'block';
+        } else if (game === 'pong') {
+          pongContainer.classList.add('active');
+          pongScoreEl.style.display = 'flex';
+          pongHint.style.display = 'block';
+        } else if (game === 'snake') {
+          snakeContainer.classList.add('active');
+          snakeScoreEl.style.display = 'flex';
+          snakeHint.style.display = 'block';
+        }
+      });
+    });
+
+    // ============================================
+    // FORTUNE COOKIE
+    // ============================================
+    const fortuneText = document.getElementById('fortuneText');
+    const newFortuneBtn = document.getElementById('newFortuneBtn');
+
+    const fortunes = [
+      "A journey of a thousand miles begins with a single step.",
+      "He who asks a question is a fool for five minutes; he who does not ask remains a fool forever.",
+      "The best time to plant a tree was twenty years ago. The second best time is now.",
+      "A gem cannot be polished without friction, nor a person perfected without trials.",
+      "Be not afraid of growing slowly, be afraid only of standing still.",
+      "A wise man makes his own decisions; an ignorant man follows public opinion.",
+      "The man who moves a mountain begins by carrying away small stones.",
+      "If you want happiness for an hour, take a nap. If you want happiness for a day, go fishing. If you want happiness for a lifetime, help someone.",
+      "A single conversation with a wise man is worth a month's study of books.",
+      "When the winds of change blow, some people build walls and others build windmills.",
+      "The tongue can paint what the eyes can't see.",
+      "A bird does not sing because it has an answer. It sings because it has a song.",
+      "He who returns from a journey is not the same as he who left.",
+      "Better a diamond with a flaw than a pebble without.",
+      "Teachers open the door, but you must enter by yourself.",
+      "A book is like a garden carried in the pocket.",
+      "The person who says it cannot be done should not interrupt the person doing it.",
+      "Fall seven times, stand up eight.",
+      "A closed mind is like a closed book: just a block of wood.",
+      "Patience is a bitter plant, but its fruit is sweet.",
+      "An inch of time is an inch of gold, but an inch of gold cannot buy an inch of time.",
+      "A smile will gain you ten more years of life.",
+      "Do not fear going forward slowly; fear only to stand still.",
+      "To know the road ahead, ask those coming back.",
+      "When you drink the water, remember the spring.",
+      "A hundred no's are less painful than one insincere yes.",
+      "The best fighter is never angry.",
+      "Learning is a treasure that will follow its owner everywhere.",
+      "A wise man adapts himself to circumstances, as water shapes itself to the vessel that contains it.",
+      "Give a man a fish and you feed him for a day. Teach a man to fish and you feed him for a lifetime.",
+      "The flower that blooms in adversity is the rarest and most beautiful of all.",
+      "A fool judges people by the presents they give him.",
+      "Dig the well before you are thirsty.",
+      "A thorn defends the rose, harming only those who would steal the blossom.",
+      "If you bow at all, bow low.",
+      "A filthy mouth will not utter decent language.",
+      "One kind word can warm three winter months.",
+      "A frog in a well does not know the great sea.",
+      "Behind every able man, there are always other able men.",
+      "A needle is not sharp at both ends.",
+      "With true friends, even water drunk together is sweet enough.",
+      "Do not use a hatchet to remove a fly from your friend's forehead.",
+      "Distant water does not put out a nearby fire.",
+      "A clear conscience never fears midnight knocking.",
+      "Even a hare will bite when cornered.",
+      "Experience is a comb which nature gives us when we are bald.",
+      "He who treads softly goes far.",
+      "If your strength is small, don't carry heavy burdens. If your words are worthless, don't give advice.",
+      "A man grows most tired while standing still.",
+      "Not until just before dawn do people sleep best; not until people get old do they become wise.",
+      "One dog barks at something, and a hundred bark at the sound.",
+      "Only one who can swallow an insult is a man.",
+      "Paper cannot wrap up fire.",
+      "Pick up a sesame seed only to lose a watermelon.",
+      "Real knowledge is knowing the extent of one's ignorance.",
+      "Ripe fruit falls by itself, but it does not fall into your mouth.",
+      "Sheep with one foot cannot walk.",
+      "Small minds discuss people. Average minds discuss events. Great minds discuss ideas.",
+      "The higher you climb, the more you show your behind.",
+      "A man who cannot tolerate small misfortunes can never accomplish great things.",
+      "The palest ink is better than the best memory.",
+      "The wise adapt themselves to circumstances, as water molds itself to the pitcher.",
+      "Think twice before jumping into any decision.",
+      "Time is money, and money is time.",
+      "To attract good fortune, spend a new penny on an old friend.",
+      "To be uncertain is to be uncomfortable, but to be certain is to be ridiculous.",
+      "Water can float a boat, but it can also sink it.",
+      "What you cannot avoid, welcome.",
+      "A stumble may prevent a fall.",
+      "A thousand cups of wine with a close friend are too few; ten words with a disagreeable person are too many.",
+      "A vacant mind is open to all suggestions, as a hollow mountain returns all sounds.",
+      "All things are difficult before they are easy.",
+      "An ant may well destroy a whole dam.",
+      "Beauty is the wisdom of women. Wisdom is the beauty of men.",
+      "Better to light a candle than to curse the darkness.",
+      "Count not what is lost but what is left.",
+      "Covet wealth, and want it; don't, and luck will grant it.",
+      "Cream always rises to the top.",
+      "Crisis is an opportunity riding the dangerous wind.",
+      "Defeat is not bitter unless you swallow it.",
+      "Do everything at the right time, and one day will seem like three.",
+      "Do not answer a fool according to his folly, or you will be like him yourself.",
+      "Even a thousand mile journey has a starting point.",
+      "Every step makes a footprint.",
+      "Failing to plan is planning to fail.",
+      "Great souls have wills; feeble ones have only wishes.",
+      "He who sacrifices his conscience to ambition burns a picture to obtain the ashes.",
+      "If heaven drops a date, open your mouth.",
+      "If you always give, you will always have.",
+      "If you stand straight, do not fear a crooked shadow."
+    ];
+
+    let lastFortuneIndex = -1;
+
+    function getRandomFortune() {
+      let index;
+      do {
+        index = Math.floor(Math.random() * fortunes.length);
+      } while (index === lastFortuneIndex && fortunes.length > 1);
+      lastFortuneIndex = index;
+      fortuneText.textContent = `"${fortunes[index]}"`;
+    }
+
+    newFortuneBtn.addEventListener('click', getRandomFortune);
+    getRandomFortune();
+  </script>
+</body>
+</html>
