@@ -831,8 +831,10 @@
     }
     document.addEventListener('click', resumeAudio, { once: true });
     document.addEventListener('keydown', resumeAudio, { once: true });
+    document.addEventListener('touchstart', resumeAudio, { once: true });
 
     function playPew() {
+      resumeAudio();
       const oscillator = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
       oscillator.connect(gainNode);
@@ -846,6 +848,7 @@
     }
 
     function playHit() {
+      resumeAudio();
       const oscillator = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
       oscillator.connect(gainNode);
@@ -860,6 +863,7 @@
     }
 
     function playScore() {
+      resumeAudio();
       const oscillator = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
       oscillator.connect(gainNode);
@@ -874,6 +878,7 @@
     }
 
     function playDeath() {
+      resumeAudio();
       const oscillator = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
       oscillator.connect(gainNode);
@@ -888,6 +893,7 @@
     }
 
     function playPong() {
+      resumeAudio();
       const oscillator = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
       oscillator.connect(gainNode);
@@ -901,6 +907,7 @@
     }
 
     function playEat() {
+      resumeAudio();
       const oscillator = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
       oscillator.connect(gainNode);
@@ -915,6 +922,7 @@
     }
 
     function playPongScore() {
+      resumeAudio();
       const oscillator = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
       oscillator.connect(gainNode);
@@ -1284,7 +1292,41 @@
     }
 
     // Event listeners
-    startBtn.addEventListener('click', startGame);
+    startBtn.addEventListener('click', () => {
+      resumeAudio();
+      startGame();
+    });
+
+    // Mobile touch controls for Space Invaders
+    let touchX = null;
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      resumeAudio();
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      touchX = touch.clientX - rect.left;
+
+      // Tap to shoot
+      if (gameRunning) {
+        bullets.push({
+          x: player.x + player.width / 2 - 1.5,
+          y: player.y
+        });
+        playPew();
+      }
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!gameRunning) return;
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const newTouchX = touch.clientX - rect.left;
+
+      // Move player based on touch position
+      player.x = newTouchX - player.width / 2;
+      player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
+    }, { passive: false });
 
     document.addEventListener('keydown', (e) => {
       keys[e.code] = true;
@@ -1515,7 +1557,28 @@
       pongOverlay.classList.remove('hidden');
     }
 
-    pongStartBtn.addEventListener('click', startPong);
+    pongStartBtn.addEventListener('click', () => {
+      resumeAudio();
+      startPong();
+    });
+
+    // Mobile touch controls for Pong
+    pongCanvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      resumeAudio();
+    }, { passive: false });
+
+    pongCanvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!pongRunning) return;
+      const touch = e.touches[0];
+      const rect = pongCanvas.getBoundingClientRect();
+      const touchY = touch.clientY - rect.top;
+
+      // Move paddle to touch position
+      playerPaddle.y = touchY - playerPaddle.height / 2;
+      playerPaddle.y = Math.max(0, Math.min(pongCanvas.height - playerPaddle.height, playerPaddle.y));
+    }, { passive: false });
 
     document.addEventListener('keydown', (e) => {
       pongKeys[e.code] = true;
@@ -1701,7 +1764,47 @@
       snakeOverlay.classList.remove('hidden');
     }
 
-    snakeStartBtn.addEventListener('click', startSnake);
+    snakeStartBtn.addEventListener('click', () => {
+      resumeAudio();
+      startSnake();
+    });
+
+    // Mobile touch controls for Snake (swipe)
+    let snakeTouchStartX = 0;
+    let snakeTouchStartY = 0;
+
+    snakeCanvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      resumeAudio();
+      snakeTouchStartX = e.touches[0].clientX;
+      snakeTouchStartY = e.touches[0].clientY;
+    }, { passive: false });
+
+    snakeCanvas.addEventListener('touchend', (e) => {
+      if (!snakeRunning) return;
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+
+      const diffX = touchEndX - snakeTouchStartX;
+      const diffY = touchEndY - snakeTouchStartY;
+
+      // Determine swipe direction
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        // Horizontal swipe
+        if (diffX > 30 && snakeDir.x !== -1) {
+          nextDir = { x: 1, y: 0 }; // Right
+        } else if (diffX < -30 && snakeDir.x !== 1) {
+          nextDir = { x: -1, y: 0 }; // Left
+        }
+      } else {
+        // Vertical swipe
+        if (diffY > 30 && snakeDir.y !== -1) {
+          nextDir = { x: 0, y: 1 }; // Down
+        } else if (diffY < -30 && snakeDir.y !== 1) {
+          nextDir = { x: 0, y: -1 }; // Up
+        }
+      }
+    }, { passive: false });
 
     document.addEventListener('keydown', (e) => {
       if (!snakeRunning) return;
